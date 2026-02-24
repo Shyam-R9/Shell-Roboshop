@@ -62,7 +62,17 @@ get_ip_address() {
     IP_ADDR=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=$instance" --query 'Reservations[*].Instances[*].PrivateIpAddress' --output text --region $REGION)
     RECORD_NAME=$instance.$DOMAIN_NAME
   else
-    IP_ADDR=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=$instance" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text --region $REGION)
+    # Loop until Public IP is assigned
+    while true; do
+      IP_ADDR=$(aws ec2 describe-instances --instance-ids $instance_id \
+        --query 'Reservations[*].Instances[*].PublicIpAddress' \
+        --output text --region $REGION)
+      if [[ -n "$IP_ADDR" && "$IP_ADDR" != "None" ]]; then
+        break
+      fi
+      echo "Waiting for Public IP..."
+      sleep 5
+    done
     RECORD_NAME=$DOMAIN_NAME
   fi
 
