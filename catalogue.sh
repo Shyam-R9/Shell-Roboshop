@@ -5,7 +5,7 @@ R="\e[31m" G="\e[32m" Y="\e[33m" N="\e[0m"
 
 #Create log file
 LOG_FOLDER="/var/log/catalogue"
-SCRIPT_NAME="$(basename -"$0" .sh)"
+SCRIPT_NAME="$(basename "$0" .sh)"
 LOG_FILE="$LOG_FOLDER/$SCRIPT_NAME.log"
 mkdir -p $LOG_FOLDER
 
