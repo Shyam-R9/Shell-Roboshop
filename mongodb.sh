@@ -7,7 +7,7 @@ R="\e[31m" G="\e[32m" Y="\e[33m" N="\e[0m"
 
 #Set logging
 LOG_FOLDER="/var/log/mongodb"
-SCRIPT_NAME=(basename "$0" .sh)
+SCRIPT_NAME=$(basename "$0" .sh)
 LOG_FILE="$LOG_FOLDER/$SCRIPT_NAME.log"
 mkdir -p "$LOG_FOLDER"
 
@@ -41,15 +41,15 @@ fi
 
 #copy mongodb file to repos
 cp mongodb.repo /etc/yum.repos.d/mongodb.repo
-check_return-code $? "copy of mongodb file to repos"
+check_return_code $? "copy of mongodb file to repos"
 
 ## Idempotent installation check
 if command -v mongod &>/dev/null; then
-    log "$R mongodb is already installed. Skipping the installation $N"
+    log "$G mongodb is already installed. Skipping the installation $N"
 else
     log "$Y installing mongod $N"
     dnf install mongodb-org -y 
-    check_return-code $? "installation of mongodb"
+    check_return_code $? "installation of mongodb"
 fi
 
 #Enable mongodb service
@@ -60,12 +60,12 @@ systemctl enable mongod
 systemctl start mongod
 
 #Modify mongodb config file accept connection from all hosts
-sed -i '/s/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
+sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
 
 #restart service
 log "$Y restarting the service $N"
 systemctl restart mongod
-check_return-code $? "restart of mongodb service"
+check_return_code $? "restart of mongodb service"
 
 #check session statistics
 log "$G check session statistics $N"
