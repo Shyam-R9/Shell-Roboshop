@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Script to install and configure mongodb
+log "$G********Script to install and configure mongodb***********$N"
 
 #Set color coding
 R="\e[31m" G="\e[32m" Y="\e[33m" N="\e[0m"
@@ -29,9 +29,9 @@ check_return_code() {
     fi
 }
 
-log "$Y Script Execution started at $(date)$N"
+log "$YScript Execution started at $(date)$N"
 
-#Check user privilages
+log "$YChecking user privilages to install the software$N"
 if [ $(id -u) -ne 0 ]; then
    log "$R Error: You do not have privilages to install the software $N"
     exit 1
@@ -39,9 +39,8 @@ else
     log "$G You have necessary permissions to install the software $N"
 fi
 
-#copy mongodb file to repos
+log "$Ycopying mongodb file to repos$N"
 cp mongodb.repo /etc/yum.repos.d/mongodb.repo
-check_return_code $? "copy of mongodb file to repos"
 
 ## Idempotent installation check
 if command -v mongod &>/dev/null; then
@@ -52,23 +51,19 @@ else
     check_return_code $? "installation of mongodb"
 fi
 
-#Enable mongodb service
+log "$Yenabling mongod service$N"
 systemctl enable mongod
 
-
-#Start mongodb service
+log "$Ystarting mongod service$N"
 systemctl start mongod
 
-#Modify mongodb config file accept connection from all hosts
+log "$YModifying mongodb config file accept connection from all hosts$N"
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
 
-#restart service
 log "$Y restarting the service $N"
 systemctl restart mongod
-check_return_code $? "restart of mongodb service"
 
-#check session statistics
-log "$G check session statistics $N"
+log "$Ycheck session statistics$N"
 ss -nltpu
 
 
