@@ -12,16 +12,16 @@ mkdir -p $LOG_FOLDER
 #Settingup structured log
 log () {
     local msg=$1
-    echo -e "${G}$(date '+%Y-%m-%d %H:%M:%S')${N} $msg" | tee -a $LOG_FILE
+    echo -e "$$(date '+%Y-%m-%d %H:%M:%S') $msg" | tee -a $LOG_FILE
 }
 
 check_status() {
     local status=$1
     local message=$2
-    if status -eq 0; then
-        log echo -e "${G}$2 is success${N}"
+    if $status -eq 0; then
+        log "${G}$message is success${N}"
     else
-        log echo -e "${R}$2 is failed${N}"
+        log "${R}$message is failed${N}"
         exit 1
     fi
 }
@@ -32,14 +32,14 @@ check_status $? "Disabling is"
 
 log "${G}enabling the nodejs 20 download stream${N}"
 dnf module enable nodejs:20 -y
-check_status $? "Enbling NodeJS20 is"
+check_status $? "Enabling NodeJS20 is"
 
 log "${G}install NodeJS 20${N}"
 dnf install nodejs -y
 check_status $? "Installation of NodeJs"
 
 log "${G}Checking if the roboshop user already exists${N}"
-if [ id -u roboshop ]; then
+if id -u roboshop &>/dev/null; then
     log "${Y}roboshop user already exists, skipping user creation${N}"
 else
     log "${G}roboshop user doesn't exist, proceeding with user creation${N}"
