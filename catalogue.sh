@@ -12,13 +12,13 @@ mkdir -p $LOG_FOLDER
 #Settingup structured log
 log () {
     local msg=$1
-    echo -e "$$(date '+%Y-%m-%d %H:%M:%S') $msg" | tee -a $LOG_FILE
+    echo -e "$(date '+%Y-%m-%d %H:%M:%S') $msg" | tee -a $LOG_FILE
 }
 
 check_status() {
     local status=$1
     local message=$2
-    if $status -eq 0; then
+    if [ $status -eq 0 ]; then
         log "${G}$message is success${N}"
     else
         log "${R}$message is failed${N}"
@@ -28,13 +28,13 @@ check_status() {
 
 log "${G}Disabling the default version of nodejs download${N}"
 dnf module disable nodejs -y
-check_status $? "Disabling is"
+check_status $? "Disabling"
 
 log "${G}enabling the nodejs 20 download stream${N}"
 dnf module enable nodejs:20 -y
 check_status $? "Enabling NodeJS20 is"
 
-log "${G}install NodeJS 20${N}"
+log "${G}install NodeJS20${N}"
 dnf install nodejs -y
 check_status $? "Installation of NodeJs"
 
@@ -88,7 +88,7 @@ check_status $? "Copy of the mongo repo file"
 
 log "${G}Install mongo client${N}"
 dnf install mongodb-mongosh -y
-check_status $? "Istallation of mongo"
+check_status $? "Installation of mongo"
 
 log "${G}Load master data${N}"
 mongosh --host MONGODB </app/db/master-data.js
