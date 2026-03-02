@@ -68,7 +68,7 @@ npm install
 check_status $? "Installing dependencies"
 
 log "${G}Copy the catalogue.service file to the systemd unit files director${N}"
-cp /root/Shell-roboshop/catalogue.service /etc/systemd/system/
+cp /root/Shell-Roboshop/catalogue.service /etc/systemd/system/
 check_status $? "Copy of catalogue.service file"
 
 log "${G}Enable catalogue service${N}"
