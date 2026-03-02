@@ -83,7 +83,7 @@ done
 log "${G}Catalogue service is now active${N}"
 
 log "${G}Copy mongo repo file${N}"
-cp mongo.repo /etc/yum.repos.d/
+cp /root/Shell-Roboshop/mongo.repo /etc/yum.repos.d/
 check_status $? "Copy of the mongo repo file"
 
 log "${G}Install mongo client${N}"
