@@ -8,6 +8,9 @@ SCRIPT_NAME=$(basename $0 .sh)
 LOGFILE_NAME="$LOG_FOLDER/$SCRIPT_NAME.log"
 mkdir -p $LOG_FOLDER
 
+# Get absolute path of the script directory
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+
 log () {
     local msg=$1
     echo -e "$(date '+%Y-%m-%d +%H-%M-%S') $msg" | tee -a $LOGFILE_NAME
@@ -71,7 +74,7 @@ unzip /tmp/frontend.zip
 check_status $? "Copying"
 
 log "copy the custom nginx.conf file to /etc/nginx/"
-cp /root/Shell-Roboshop/nginx.conf /etc/nginx/
+cp $SCRIPT_DIR/nginx.conf /etc/nginx/
 check_status $? "copying of nginx.conf file"
 
 log "Restarting nginx service"
