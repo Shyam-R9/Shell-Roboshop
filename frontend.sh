@@ -30,7 +30,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 log "Disabling default nginx module stream"
-dnf module disable nginx* -y
+dnf module disable nginx -y
 check_status $? "Disabling"
 
 log "Enabling nginx 1.24 version"
