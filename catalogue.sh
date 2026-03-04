@@ -3,6 +3,8 @@
 #set color code
 R="\e[31m" G="\e[32m" Y="\e[33m" N="\e[0m"
 
+SCRIPT_DIRECTORY=$(cd "$(dirname "$0")" && pwd)
+
 #Create log file
 LOG_FOLDER="/var/log/catalogue"
 SCRIPT_NAME="$(basename "$0" .sh)"
@@ -68,7 +70,7 @@ npm install
 check_status $? "Installing dependencies"
 
 log "${G}Copy the catalogue.service file to the systemd unit files director${N}"
-cp /root/Shell-Roboshop/catalogue.service /etc/systemd/system/
+cp "$SCRIPT_DIRECTORY"/catalogue.service /etc/systemd/system/
 check_status $? "Copy of catalogue.service file"
 
 log "${G}Enable catalogue service${N}"
