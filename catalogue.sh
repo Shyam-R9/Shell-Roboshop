@@ -85,7 +85,7 @@ done
 log "${G}Catalogue service is now active${N}"
 
 log "${G}Copy mongo repo file${N}"
-cp /root/Shell-Roboshop/mongo.repo /etc/yum.repos.d/
+cp "$SCRIPT_DIRECTORY"/mongo.repo /etc/yum.repos.d/
 check_status $? "Copy of the mongo repo file"
 
 log "${G}Install mongo client${N}"
@@ -93,5 +93,5 @@ dnf install mongodb-mongosh -y
 check_status $? "Installation of mongo"
 
 log "${G}Load master data${N}"
-mongosh --host MONGODB </app/db/master-data.js
+mongosh --host mongodb.studydevops.fun </app/db/master-data.js
 check_status $? "Loading of the master data to mongo db"
