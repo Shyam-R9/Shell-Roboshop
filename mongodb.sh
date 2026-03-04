@@ -4,7 +4,7 @@ log "$G********Script to install and configure mongodb***********$N"
 
 #Set color coding
 R="\e[31m" G="\e[32m" Y="\e[33m" N="\e[0m"
-
+SCRIPT_DIRECTORY=$(cd "$(dirname "$0")" && pwd)
 #Set logging
 LOG_FOLDER="/var/log/mongodb"
 SCRIPT_NAME=$(basename "$0" .sh)
@@ -40,7 +40,7 @@ else
 fi
 
 log "$Ycopying mongodb file to repos$N"
-cp mongodb.repo /etc/yum.repos.d/mongodb.repo
+cp "$SCRIPT_DIRECTORY"/mongodb.repo /etc/yum.repos.d/mongodb.repo
 
 ## Idempotent installation check
 if command -v mongod &>/dev/null; then
