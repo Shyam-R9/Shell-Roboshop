@@ -40,7 +40,7 @@ else
 fi
 
 log "$Ycopying mongodb file to repos$N"
-cp "$SCRIPT_DIRECTORY"/mongodb.repo /etc/yum.repos.d/mongodb.repo
+cp "$SCRIPT_DIRECTORY"/mongo.repo /etc/yum.repos.d/
 
 ## Idempotent installation check
 if command -v mongod &>/dev/null; then
