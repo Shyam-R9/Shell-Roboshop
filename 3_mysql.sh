@@ -14,7 +14,7 @@ mkdir -p "$LOG_FOLDER"
 #Recording events to the log file
 log () {
     local msg=$1
-    echo - e "$(date '+%Y-%m-%d %H:%M:%S')" $msg | tee -a $LOG_FILE
+    echo - e "$(date '+%Y-%m-%d %H:%M:%S') $msg" | tee -a $LOG_FILE
 }
 
 #Check return code of the most recently executed foreground command
