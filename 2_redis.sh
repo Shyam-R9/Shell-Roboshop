@@ -27,7 +27,7 @@ check_status () {
     fi    
 }
 
-if [ EUID -ne 0 ]; then
+if [ $EUID -ne 0 ]; then
     log "${R}Please run this script as root${N}"
     exit 1
 fi
