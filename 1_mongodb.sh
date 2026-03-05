@@ -39,7 +39,7 @@ log "${Y}Copying mongodb file to repos${N}"
 cp "$SCRIPT_DIRECTORY"/mongo.repo /etc/yum.repos.d/
 check_status $? "Copying"
 
-## Idempotent installation check
+# Idempotent installation check
 if command -v mongod &>/dev/null; then
     log "${G}mongodb is already installed. Skipping the installation${N}"
 else
@@ -68,6 +68,6 @@ log "${Y}Restarting the service${N}"
 systemctl restart mongod
 check_status $? "Restarting"
 
-log "${Y}Displaying session statistics${N}"
+log "${G}Displaying session statistics${G}"
 sleep 5
 ss -nltpu
