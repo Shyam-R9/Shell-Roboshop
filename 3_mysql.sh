@@ -30,12 +30,14 @@ check_status () {
 }
 
 log "${Y}Checking if user has root permissions${N}"
-if [ $EUID -ne 0 ]; then
+if [ $EUID -eq 0 ]; then
+    log "${R}You have the root privileges. Proceeding with installation${N}"
+else
     log "${R}Please run this script as root${N}"
     exit 1
 fi
 
-log "${Y}Idempotent installation check${N}"
+log "${Y}Idempotent installation check. Checking if mysql is already installed${N}"
 if ! rpm -q mysql &>/dev/null; then
     log "${R}mysql not installed on this server. Proceeding with installation${N}"
     log "${Y}Installing mysql server${N}"
