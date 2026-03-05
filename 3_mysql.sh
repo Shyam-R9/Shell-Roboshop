@@ -49,7 +49,7 @@ if ! rpm -q mysql &>/dev/null; then
     check_status $? "Starting the mysql service"
 else
     log "${Y}mysql already installed on this server. Skipping installation. Installed version:${N}"
-    ${G}rpm -q mysql${N} | tee -a $LOG_FILE
+    rpm -q mysql | tee -a $LOG_FILE
 fi
 
 log "${Y}Checking the service status, wait until it is active${N}"
