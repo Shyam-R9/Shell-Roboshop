@@ -38,7 +38,7 @@ fi
 log "${Y}Idempotent installation check${N}"
 if ! rpm -q mysql &>/dev/null; then
     log "${R}mysql not installed on this server. Proceeding with installation${N}"
-    log "${Y}Installing mysql server{N}"
+    log "${Y}Installing mysql server${N}"
     dnf install mysql-server -y
     check_status $? "Installing mysql server"
     log "${Y}Enable and start the service${N}"
