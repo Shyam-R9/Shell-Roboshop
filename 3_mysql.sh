@@ -31,7 +31,7 @@ check_status () {
 
 log "${Y}Checking if user has root permissions${N}"
 if [ $EUID -eq 0 ]; then
-    log "${R}You have the root privileges. Proceeding with installation${N}"
+    log "${G}You have the root privileges. Proceeding with installation${N}"
 else
     log "${R}Please run this script as root${N}"
     exit 1
@@ -49,10 +49,10 @@ if ! rpm -q mysql &>/dev/null; then
     check_status $? "Starting the mysql service"
 else
     log "${Y}mysql already installed on this server. Skipping installation. Installed version:${N}"
-    rpm -q mysql | tee -a $LOG_FILE
+    ${G}rpm -q mysql${N} | tee -a $LOG_FILE
 fi
 
-log "${Y}Check the service status, wait until it is active${N}"
+log "${Y}Checking the service status, wait until it is active${N}"
 while ! systemctl is-active --quiet mysqld; do
     log "${Y}Waiting for service to be in active state${N}"
     sleep 2
