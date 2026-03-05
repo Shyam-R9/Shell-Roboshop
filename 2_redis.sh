@@ -27,8 +27,13 @@ check_status () {
     fi    
 }
 
+if [ EUID -ne 0 ]; then
+    log "${R}Please run this script as root${N}"
+    exit 1
+fi
+
 # Idempotent installation check
-if ! rpm -q redis &>dev/null; then
+if ! rpm -q redis &>/dev/null; then
     log "${Y}Redis not installed on this server. Proceeding with installation${N}"
 
     log "${Y}Disabling default redis version${N}"
