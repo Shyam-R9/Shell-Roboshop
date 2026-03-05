@@ -27,12 +27,13 @@ check_status () {
     fi    
 }
 
+log "{Y}Checking if user has root permissions{N}"
 if [ $EUID -ne 0 ]; then
     log "${R}Please run this script as root${N}"
     exit 1
 fi
 
-# Idempotent installation check
+log "{Y}Idempotent installation check{N}"
 if ! rpm -q redis &>/dev/null; then
     log "${Y}Redis not installed on this server. Proceeding with installation${N}"
 
@@ -48,8 +49,8 @@ if ! rpm -q redis &>/dev/null; then
     dnf install redis -y
     check_status $? "Installing redis 7"
 else
-    log "Redis already installed on this server. Installed version"
-    dnf list installed redis | tee -a "$LOG_FILE"
+    log "Redis already installed on this server. Skipping installation. Installed version:${N}"
+    rpm -q redis | tee -a "$LOG_FILE"
     log "Proceeding with configuration"
 fi
 
