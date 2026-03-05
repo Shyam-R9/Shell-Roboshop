@@ -28,8 +28,8 @@ check_status () {
 }
 
 # Idempotent installation check
-if ! dnf list installed redis &>dev/null; then
-    log "Redis not installed on this server. Proceeding with installation"
+if ! rpm -q redis &>dev/null; then
+    log "${Y}Redis not installed on this server. Proceeding with installation${N}"
 
     log "${Y}Disabling default redis version${N}"
     dnf module disable redis -y
@@ -68,7 +68,7 @@ check_status $? "Starting"
 
 sleep 5
 
-log "${Y}Redis service status${N}"
+log "${G}Redis service status${N}"
 systemctl status redis --no-pager --plain | tee -a "$LOG_FILE"
 
 
