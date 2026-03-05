@@ -20,9 +20,9 @@ check_status () {
     local status=$1
     local msg=$2
     if [ $status -eq 0 ]; then
-        log "${G}$msg :Successful${N}"
+        log "${G}$msg: Successful${N}"
     else
-        log "${R}$msg :Failed${N}"
+        log "${R}$msg: Failed${N}"
         exit 1
     fi    
 }
@@ -60,14 +60,14 @@ while ! systemctl is-active --quiet mongod; do
 done
 log "${G}Mongod service is now active${N}"
 
-log "${Y}Modifying mongodb config file accept connection from all hosts${N}"
+log "${Y}Configuring mongodb config file to accept connection from all hosts${N}"
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
+check_status $? "Config change"
 
 log "${Y}Restarting the service${N}"
 systemctl restart mongod
+check_status $? "Restarting"
 
 log "${Y}Displaying session statistics${N}"
-sleep 2
+sleep 5
 ss -nltpu
-
-
