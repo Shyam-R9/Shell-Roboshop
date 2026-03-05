@@ -29,30 +29,32 @@ check_status () {
     fi
 }
 
-log "{Y}Checking if user has root permissions{N}"
+log "${Y}Checking if user has root permissions${N}"
 if [ $EUID -ne 0 ]; then
     log "${R}Please run this script as root${N}"
     exit 1
 fi
 
-log "{Y}Idempotent installation check{N}"
+log "${Y}Idempotent installation check${N}"
 if ! rpm -q mysql &>/dev/null; then
-    log "${Y}mysql not installed on this server. Proceeding with installation${N}"
-    log "Installing mysql server"
+    log "${R}mysql not installed on this server. Proceeding with installation${N}"
+    log "${Y}Installing mysql server{N}"
     dnf install mysql-server -y
     check_status $? "Installing mysql server"
-    log "Enable and start the service"
+    log "${Y}Enable and start the service${N}"
     systemctl enable mysqld
     systemctl start mysqld
     check_status $? "Starting the mysql service"
 else
-    log "${Y}mysql already installed on this server. Skipping the installation${N}"
-
+    log "${Y}mysql already installed on this server. Skipping installation. Installed version:${N}"
+    rpm -q mysql | tee -a $LOG_FILE
 fi
 
-log "Check the service status, wait until it is active"
+log "${Y}Check the service status, wait until it is active${N}"
 while ! systemctl is-active --quiet mysqld; do
-    log "Waiting for service to be in active state"
+    log "${Y}Waiting for service to be in active state${N}"
     sleep 2
 done
-log "mysql-server service is now active"
+
+log "${Y}mysql-server service status${N}"
+systemctl status mysqld --no-pager --plain | tee -a "$LOG_FILE"
