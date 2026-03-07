@@ -3,9 +3,10 @@ set -euo pipefail
 
 SCRIPT_DIRECTORY=$(cd "$(dirname "$0")" && pwd)
 
+
 LOG_File="/var/log/mongodb-server-install.log"
 
-exec > >(awk '{ print strftime("%Y-%m-%d %H:%M:%S"), $0 }' | tee -a $LOG_File)
+exec > >(awk '{ -W print strftime("%Y-%m-%d %H:%M:%S"), $0 }' | tee -a $LOG_File)
 exec 2>&1
 
 echo "Copying mongo repo to repos directory"
