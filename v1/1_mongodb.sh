@@ -13,7 +13,7 @@ PASSWORD="roboshop123"
 
 echo "Starting RabbitMQ installation"
 
-cp $SCRIPT_DIRECTORY/rabbitmq.repo /etc/yum.repos.d/
+cp "$SCRIPT_DIRECTORY/rabbitmq.repo" /etc/yum.repos.d/
 
 dnf install rabbitmq-server -y
 
