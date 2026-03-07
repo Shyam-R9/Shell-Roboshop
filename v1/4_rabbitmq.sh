@@ -5,7 +5,7 @@ SCRIPT_DIRECTORY=$(cd "$(dirname "$0")" && pwd)
 
 LOG_FILE="/var/log/rabbitmq-install.log"
 
-exec > >(awk '{ print strftime("%Y-%m-%d %H:%M:%S"), $0 }' | tee -a $LOG_FILE)
+exec > >(awk '{ print strftime("%Y-%m-%d %H:%M:%S"), $0 }' | tee -a $LOG_File)
 exec 2>&1
 
 USER="roboshop"
