@@ -3,29 +3,36 @@ set -euo pipefail
 
 SCRIPT_DIRECTORY=$(cd "$(dirname "$0")" && pwd)
 
-LOG_FILE="/var/log/rabbitmq-install.log"
 
-exec > >(tee -a $LOG_FILE)
+LOG_File="/var/log/mongodb-server-install.log"
+
+exec > >(awk '{ print strftime("%Y-%m-%d %H:%M:%S"), $0 }' | tee -a $LOG_FILE)
 exec 2>&1
 
-USER="roboshop"
-PASSWORD="roboshop123"
+echo "Copying mongo repo to repos directory"
+cp "$SCRIPT_DIRECTORY/mongo.repo" /etc/yum.repos.d/mongo.repo
 
-echo "Starting RabbitMQ installation"
+echo "Installing mongodb-server"
+dnf install mongodb-org -y
 
-cp "$SCRIPT_DIRECTORY/rabbitmq.repo" /etc/yum.repos.d/
+echo "Enabling mongodb-server service"
+systemctl enable mongod
 
-dnf install rabbitmq-server -y
+echo "Starting mongodb-service and waiting until it comes to active state"
+systemctl start mongod
+while ! systemctl is-active --quiet mongod; do
+    echo "Waiting for mongodb service to be active"
+    sleep 5
+done
+echo "mongodb service is now active"
 
-systemctl enable rabbitmq-server
-systemctl start rabbitmq-server
+echo "Configuring mongodb server to accept connections from all hosts"
+sed -i 's/127.0.0.1/0.0.0.1/g' /etc/mongod.conf
 
-rabbitmqctl add_user $USER $PASSWORD
+echo "Restarting mongodb service"
+systemctl status mongod
 
-rabbitmqctl set_permissions -p / $USER ".*" ".*" ".*"
-
-rabbitmqctl status
-
-echo "RabbitMQ installation completed"
+echo "Mongodb service status"
+systemctl status mongod
 
 
