@@ -126,46 +126,45 @@ log INFO "Checking if RabbitMQ is already installed"
 if ! rpm -q rabbitmq-server &>/dev/null; then
 
     log INFO "Copying RabbitMQ repository"
-
     cp "$SCRIPT_DIR/rabbitmq.repo" /etc/yum.repos.d/
 
     log INFO "Installing RabbitMQ"
-
     retry 3 dnf install rabbitmq-server -y
 
     log INFO "Enabling RabbitMQ service"
-
     systemctl enable rabbitmq-server
-
-    log INFO "Starting RabbitMQ service"
-
-    retry 3 systemctl start rabbitmq-server
 
 else
 
     installed_version=$(rpm -q rabbitmq-server)
-
     log WARN "RabbitMQ already installed: ${installed_version}"
 
 fi
 
 ########################################
-# WAIT FOR SERVICE
+# START RABBITMQ SERVICE AND WAIT FOR READINESS
 ########################################
 
-log INFO "Checking RabbitMQ service status"
+log INFO "Starting RabbitMQ service"
+retry 3 systemctl start rabbitmq-server
 
+log INFO "Waiting for RabbitMQ node to be fully ready"
+
+# Wait until RabbitMQ node is fully initialized
 for i in {1..12}; do
-
-    if systemctl is-active --quiet rabbitmq-server; then
-        log INFO "RabbitMQ service is active"
+    if rabbitmqctl status &>/dev/null; then
+        log INFO "RabbitMQ is ready"
         break
     fi
-
-    log WARN "Waiting for RabbitMQ service..."
+    log WARN "RabbitMQ not ready yet, retrying... (${i}/12)"
     sleep 5
-
 done
+
+# Final check
+if ! rabbitmqctl status &>/dev/null; then
+    log ERROR "RabbitMQ failed to become ready"
+    exit 1
+fi
 
 ########################################
 # CREATE APPLICATION USER
@@ -174,19 +173,14 @@ done
 log INFO "Checking if roboshop user exists"
 
 if ! rabbitmqctl list_users | grep -q '^roboshop'; then
-
     log INFO "Creating roboshop RabbitMQ user"
 
-    rabbitmqctl add_user roboshop roboshop123
-
-    rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
+    retry 3 rabbitmqctl add_user roboshop roboshop123
+    retry 3 rabbitmqctl set_permissions -p / roboshop ".*" ".*" ".*"
 
     log INFO "roboshop user created successfully"
-
 else
-
     log WARN "roboshop RabbitMQ user already exists"
-
 fi
 
 ########################################
@@ -194,7 +188,5 @@ fi
 ########################################
 
 log INFO "Running RabbitMQ health check"
-
 rabbitmqctl status >/dev/null
-
 log INFO "RabbitMQ installation completed successfully"
