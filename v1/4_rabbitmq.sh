@@ -24,6 +24,18 @@ else
     exit 1
 fi
 
+# --- Trap handlers ---
+# Log unexpected errors with line number
+trap 'log "${R}Unexpected error at line $LINENO${N}"' ERR
+
+# Cleanup on exit (success or failure)
+trap 'log "${Y}Script exited. Cleaning up temporary files...${N}"
+      rm -f /tmp/rabbitmq-install.tmp 2>/dev/null || true' EXIT
+
+# Handle Ctrl+C (SIGINT)
+trap 'log "${R}Installation interrupted by user (Ctrl+C). Exiting...${N}"
+      exit 130' INT
+# ---------------------
 check_status () {
     local status=$1
     local msg=$2
