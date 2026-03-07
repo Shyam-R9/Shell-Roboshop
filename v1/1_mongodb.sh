@@ -26,7 +26,7 @@ done
 echo "mongodb service is now active"
 
 echo "Configuring mongodb server to accept connections from all hosts"
-sed -i 's/127.0.0.1/0.0.0.1/g' /etc/mongod.conf
+sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mongod.conf
 
 echo "Restarting mongodb service"
 systemctl status mongod
