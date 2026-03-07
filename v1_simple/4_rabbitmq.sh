@@ -28,7 +28,7 @@ while ! systemctl is-active --quiet rabbitmq-server; do
 done
 echo "rabbitmq-server service is now active"
 
-echo "Adding a user rabbitmq to access the database"
+echo "Adding the user 'roboshop' to rabbitmq database to access the database"
 rabbitmqctl add_user $USER $PASSWORD
 rabbitmqctl set_permissions -p / $USER ".*" ".*" ".*"
 rabbitmqctl status
