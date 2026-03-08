@@ -3,10 +3,15 @@ set -euo pipefail
 
 SCRIPT_DIRECTORY=$(cd "$(dirname "$0")" && pwd)
 
-LOG_File="/var/log/rabbitmq-server-install.log"
+LOG_FILE="/var/log/rabbitmq-server-install.log"
 
-exec > >(awk '{ print strftime("%Y-%m-%d %H:%M:%S"), $0; fflush(); }' | tee -a "$LOG_File")
+exec > >(awk '{ print strftime("%Y-%m-%d %H:%M:%S"), $0; fflush(); }' | tee -a "$LOG_FILE")
 exec 2>&1
+
+if [[ $EUID -ne 0 ]]; then
+    echo "Please run as root"
+    exit 1
+fi
 
 USER="roboshop"
 PASSWORD="roboshop123"

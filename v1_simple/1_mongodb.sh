@@ -8,6 +8,11 @@ LOG_File="/var/log/mongodb-server-install.log"
 exec > >(awk '{ print strftime("%Y-%m-%d %H:%M:%S"), $0; fflush(); }' | tee -a "$LOG_File")
 exec 2>&1
 
+if [[ $EUID -ne 0 ]]; then
+    echo "Please run as root"
+    exit 1
+fi
+
 echo "Copying mongo repo to repos directory"
 cp "$SCRIPT_DIRECTORY/mongo.repo" /etc/yum.repos.d/mongo.repo
 
