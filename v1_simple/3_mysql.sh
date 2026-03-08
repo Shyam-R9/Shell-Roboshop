@@ -2,28 +2,30 @@
 set -euo pipefail
 
 SCRIPT_DIRECTORY=$(cd "$(dirname "$0")" && pwd)
-LOG_FILE="/var/log/mysql-server-install.log"
 
-exec > >(awk '{ print strftime("%Y-%m-%d %H:%M:%S"), $0; fflush(); }' | tee -a "$LOG_FILE")
+LOG_File="/var/log/mongodb-server-install.log"
+
+exec > >(awk '{ print strftime("%Y-%m-%d %H:%M:%S"), $0; fflush(); }' | tee -a "$LOG_File")
 exec 2>&1
 
-[[ $EUID -eq 0 ]] || { echo "Please run as root"; exit 1; }
+if [[ $EUID -ne 0 ]]; then
+    echo "Please run as root"
+    exit 1
+fi
 
-log() { echo "$(date '+%Y-%m-%d %H:%M:%S') [INFO] $*"; }
+echo "Installing mysql-server"
+dnf install mysql-server -y
 
-log "Installing mysql-server"
-dnf install -y mysql-server
-
-log "Enabling mysql-server service"
+echo "Enabling mysql-server service"
 systemctl enable mysqld
 
-log "Starting mysql service"
-systemctl start mysqld
-until systemctl is-active --quiet mysqld; do
-    log "Waiting for mysql service to be active"
+echo "Starting mongodb-service and waiting until it comes to active state"
+systemctl start mongod
+while ! systemctl is-active --quiet mysqld; do
+    echo "Waiting for mysql service to be active"
     sleep 5
 done
-log "MySQL service is active"
+echo "mysql service is now active"
 
 # Prompt for root password
 read -s -p "Enter new MySQL root password: " MYSQL_ROOT_PASSWORD
