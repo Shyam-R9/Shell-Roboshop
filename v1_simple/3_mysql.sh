@@ -20,7 +20,7 @@ echo "Enabling mysql-server service"
 systemctl enable mysqld
 
 echo "Starting mongodb-service and waiting until it comes to active state"
-systemctl start mongod
+systemctl start mysqld
 while ! systemctl is-active --quiet mysqld; do
     echo "Waiting for mysql service to be active"
     sleep 5
