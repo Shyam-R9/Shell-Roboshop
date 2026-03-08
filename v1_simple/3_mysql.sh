@@ -22,8 +22,11 @@ while ! systemctl is-active --quiet mysqld; do
 done
 echo "mysql service is now active"
 
+echo "Please enter root password to setup"
+read -s MYSQL_ROOT_PASSWORD
+
 echo "Change the default root password"
-mysql_secure_installation --set-root-pass RoboShop@1
+mysql_secure_installation --set-root-pass $MYSQL_ROOT_PASSWORD
 
 echo "mysql service status:
 systemctl status mysqld
