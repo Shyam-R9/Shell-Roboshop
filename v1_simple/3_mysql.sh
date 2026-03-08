@@ -3,9 +3,9 @@ set -euo pipefail
 
 SCRIPT_DIRECTORY=$(cd "$(dirname "$0")" && pwd)
 
-LOG_File="/var/log/mysql-server-install.log"
+LOG_FILE="/var/log/mysql-server-install.log"
 
-exec > >(awk '{ print strftime("%Y-%m-%d %H:%M:%S"), $0; fflush(); }' | tee -a "$LOG_File")
+exec > >(awk '{ print strftime("%Y-%m-%d %H:%M:%S"), $0; fflush(); }' | tee -a "$LOG_FILE")
 exec 2>&1
 
 echo "Installing mysql-server"
@@ -25,8 +25,8 @@ echo "mysql service is now active"
 echo "Please enter root password to setup"
 read -s MYSQL_ROOT_PASSWORD
 
-echo "Change the default root password"
-mysql_secure_installation --set-root-pass $MYSQL_ROOT_PASSWORD
+echo "Changing MySQL root password"
+mysql -u root -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';"
 
-echo "mysql service status:
+echo "mysql service status"
 systemctl status mysqld
