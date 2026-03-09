@@ -16,11 +16,19 @@ fi
 echo "Install GoLang"
 dnf install golang -y
 
-echo "Create application user"
-useradd --system --home /app --shell /sbin/nologin --comment "roboshop system user" roboshop
+if ! id roboshop &>/dev/null; then
+    echo "Creating roboshop user"
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop service account" roboshop
+else
+    echo "roboshop user already exists, skipping"
+fi
 
-echo "setup an app directory"
-mkdir /app 
+if [ ! -d /app ]; then
+    echo "Creating app folder"
+    mkdir /app
+else
+    echo "/app folder already exists, skipping"
+fi
 
 echo "Download the application code to app directory"
 curl -L -o /tmp/dispatch.zip https://roboshop-artifacts.s3.amazonaws.com/dispatch-v3.zip 
