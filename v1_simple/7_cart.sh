@@ -22,11 +22,19 @@ dnf module enable nodejs:20 -y
 echo "Installing nodejs version 20"
 dnf install nodejs -y
 
-echo "Creating app folder"
-mkdir /app
+if ! id roboshop &>/dev/null; then
+    echo "Creating roboshop user"
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop service account" roboshop
+else
+    echo "roboshop user already exists, skipping"
+fi
 
-echo "Creating service account for user application"
-useradd --system --home /app --shell /sbin/nologin --comment "service account for cart application" roboshop
+if [ ! -d /app ]; then
+    echo "Creating app folder"
+    mkdir /app
+else
+    echo "/app folder already exists, skipping"
+fi
 
 echo "Download the application to /tmp folder"
 curl -L -o /tmp/cart.zip https://roboshop-artifacts.s3.amazonaws.com/cart-v3.zip
