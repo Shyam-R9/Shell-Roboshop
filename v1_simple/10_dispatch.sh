@@ -32,8 +32,8 @@ fi
 
 echo "Download the application code to app directory"
 curl -L -o /tmp/dispatch.zip https://roboshop-artifacts.s3.amazonaws.com/dispatch-v3.zip 
-cd /app 
-unzip /tmp/dispatch.zip
+rm -rf /app/*
+unzip -o /tmp/dispatch.zip -d /app
 
 echo "Download the dependencies & build the software"
 cd /app 

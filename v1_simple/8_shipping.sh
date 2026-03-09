@@ -33,7 +33,8 @@ fi
 echo "Download the application to /tmp folder"
 curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip 
 cd /app 
-unzip /tmp/shipping.zip
+rm -rf /app/*
+unzip -o /tmp/dispatch.zip -d /app
 
 echo "download the dependencies & build the application"
 cd /app 
