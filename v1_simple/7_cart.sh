@@ -33,7 +33,7 @@ curl -L -o /tmp/cart.zip https://roboshop-artifacts.s3.amazonaws.com/cart-v3.zip
 
 echo "Downloading dependencies"
 cd /app
-unzip /tmp/user.zip
+unzip /tmp/cart.zip
 npm install
 
 echo "Creating the cart service"
