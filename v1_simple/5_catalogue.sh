@@ -53,7 +53,6 @@ echo "Catalogue service is now active"
 
 echo "Copy mongo repo file"
 cp "$SCRIPT_DIRECTORY"/mongo.repo /etc/yum.repos.d/
-check_status $? "Copy of the mongo repo file"
 
 echo "Install mongo client"
 dnf install mongodb-mongosh -y
