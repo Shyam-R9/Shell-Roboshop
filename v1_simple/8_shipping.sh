@@ -53,3 +53,4 @@ mysql -h mysql.studydevops.fun -uroot -pRoboShop@1 < /app/db/master-data.sql
 
 echo "Restart the shipping service"
 systemctl restart shipping
+
