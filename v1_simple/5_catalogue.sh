@@ -22,37 +22,54 @@ dnf module enable nodejs:20 -y
 echo "install NodeJS20"
 dnf install nodejs -y
 
-echo "Creating roboshop user"
-useradd --system --home /app --shell /sbin/nologin --comment "roboshop service account" roboshop
+if ! id roboshop &>/dev/null; then
+    echo "Creating roboshop user"
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop service account" roboshop
+else
+    echo "roboshop user already exists, skipping"
+fi
 
-echo "Creating app folder"
-mkdir /app
+if [ ! -d /app ]; then
+    echo "Creating app folder"
+    mkdir /app
+else
+    echo "/app folder already exists, skipping"
+fi
 
-echo "Downloading catolouge application code to temp folder"
+echo "Downloading catalogue application code"
+curl -s -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
 rm -rf /app/*
-curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
+unzip -o /tmp/catalogue.zip -d /app
 
 echo "Installing dependencies"
 cd /app
 unzip /tmp/catalogue.zip
 npm install
 
-echo "Copy the catalogue.service file to the systemd unit files directory"
-cp "$SCRIPT_DIRECTORY"/catalogue.service /etc/systemd/system/
+if [ ! -f /etc/systemd/system/catalogue.service ]; then
+    echo "Copying catalogue.service file"
+    cp "$SCRIPT_DIRECTORY"/catalogue.service /etc/systemd/system/
+else
+    echo "catalogue.service already exists, skipping copy"
+fi
 
 echo "Enable catalogue service"
 systemctl enable catalogue.service
 
-echo "Start Catalogue service"
-systemctl start catalogue.service
+systemctl enable catalogue.service
+systemctl restart catalogue.service
 while ! systemctl is-active --quiet catalogue.service; do
     echo "Waiting for Catalogue service to be active"
     sleep 2
 done
 echo "Catalogue service is now active"
 
-echo "Copy mongo repo file"
-cp "$SCRIPT_DIRECTORY"/mongo.repo /etc/yum.repos.d/
+if [ ! -f /etc/yum.repos.d/mongo.repo ]; then
+    echo "Copying mongo.repo file"
+    cp "$SCRIPT_DIRECTORY"/mongo.repo /etc/yum.repos.d/
+else
+    echo "mongo.repo already exists, skipping copy"
+fi
 
 echo "Install mongo client"
 dnf install mongodb-mongosh -y
