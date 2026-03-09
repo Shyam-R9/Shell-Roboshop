@@ -31,12 +31,13 @@ else
 fi
 
 echo "Download the application to /tmp folder"
-curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip
-
-echo "Downloading dependencies and build the application"
-cd /app
+curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip 
+cd /app 
 unzip /tmp/shipping.zip
-mvn clean package
+
+echo "download the dependencies & build the application"
+cd /app 
+mvn clean package 
 mv target/shipping-1.0.jar shipping.jar 
 
 echo "Creating the shipping service"
