@@ -25,7 +25,7 @@ dnf install nodejs -y
 echo "Creating roboshop user"
 useradd --system --home /app --shell /sbin/nologin --comment "roboshop service account" roboshop
 
-echo " Creating app folder"
+echo "Creating app folder"
 mkdir /app
 
 echo "Downloading catolouge application code to temp folder"
