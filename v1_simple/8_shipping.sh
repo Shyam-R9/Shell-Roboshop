@@ -16,9 +16,19 @@ fi
 echo "installing maven, which also installs Java"
 dnf install maven -y
 
-echo "Creating service account for shipping application"
-useradd --system --home /app --shell /sbin/nologin --comment "shipping account for user application" roboshop
+if ! id roboshop &>/dev/null; then
+    echo "Creating roboshop user"
+    useradd --system --home /app --shell /sbin/nologin --comment "roboshop service account" roboshop
+else
+    echo "roboshop user already exists, skipping"
+fi
 
+if [ ! -d /app ]; then
+    echo "Creating app folder"
+    mkdir /app
+else
+    echo "/app folder already exists, skipping"
+fi
 echo "Download the application to /tmp folder"
 curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip
 
