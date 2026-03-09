@@ -36,10 +36,9 @@ else
     echo "/app folder already exists, skipping"
 fi
 
-echo "Downloading catalogue application code"
-curl -s -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
+echo "Downloading catolouge application code to temp folder"
 rm -rf /app/*
-unzip -o /tmp/catalogue.zip -d /app
+curl -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
 
 echo "Installing dependencies"
 cd /app
