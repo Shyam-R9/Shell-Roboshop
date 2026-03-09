@@ -34,7 +34,7 @@ go get
 go build
 
 echo "Setup SystemD Payment Service"
-cp $SCRIPT_DIRECTORY/payment.service /etc/systemd/system/
+cp $SCRIPT_DIRECTORY/dispatch.service /etc/systemd/system/
 
 echo "Load the service"
 systemctl daemon-reload
