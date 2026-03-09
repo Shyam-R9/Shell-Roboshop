@@ -29,6 +29,7 @@ if [ ! -d /app ]; then
 else
     echo "/app folder already exists, skipping"
 fi
+
 echo "Download the application to /tmp folder"
 curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip
 
@@ -51,6 +52,9 @@ while ! systemctl is-active --quiet shipping.service; do
     log "Waiting for service to be in active state"
     sleep 2
 done
+
+echo "Installing mysql client"
+dnf install mysql -y 
 
 echo "Loading the database schema to sql server"
 mysql -h mysql.studydevops.fun -uroot -pRoboShop@1 < /app/db/schema.sql
