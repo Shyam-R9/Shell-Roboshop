@@ -57,4 +57,4 @@ while ! systemctl is-active --quiet cart.service; do
     log "Waiting for service to be in active state"
     sleep 2
 done
-log "Cart service is now active"
+echo "Cart service is now active"
