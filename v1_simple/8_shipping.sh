@@ -34,7 +34,7 @@ echo "Download the application to /tmp folder"
 curl -L -o /tmp/shipping.zip https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip 
 cd /app 
 rm -rf /app/*
-unzip -o /tmp/dispatch.zip -d /app
+unzip -o /tmp/shipping.zip -d /app
 
 echo "download the dependencies & build the application"
 cd /app 
@@ -69,4 +69,5 @@ mysql -h mysql.studydevops.fun -uroot -pRoboShop@1 < /app/db/master-data.sql
 
 echo "Restart the shipping service"
 systemctl restart shipping
+
 
